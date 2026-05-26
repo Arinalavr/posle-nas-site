@@ -34,3 +34,7 @@
 - shadcn/ui
 - lucide-react
 - Vercel
+
+## Подробнее о данных
+
+Описание структуры базы данных и порядка работы с контентом лежит в [`data/README.md`](data/README.md).
