@@ -50,26 +50,31 @@ function InstagramLink() {
 
 export function SiteHeader({ active }: SiteHeaderProps) {
   return (
-    <header className="mx-auto flex w-full max-w-7xl flex-col items-start gap-5 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-10 md:py-7">
-      <Link href="/" className="inline-flex items-center gap-4 text-[var(--brown)] md:gap-5">
-        <img
-          src="/logo/posle-nas-mark.svg"
-          alt=""
-          className="h-12 w-12 object-contain opacity-95 md:h-16 md:w-16"
-        />
-        <span className="font-serif text-[32px] leading-none text-[var(--ink)] md:text-[38px]">
-          после нас
-        </span>
-      </Link>
-      <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs uppercase tracking-[0.18em] text-[var(--brown)] md:gap-8 md:text-sm md:tracking-[0.2em]">
-        <NavLink href="/" active={active === "exhibition"}>
-          выставка
-        </NavLink>
-        <NavLink href="/items" active={active === "items"}>
-          вещи
-        </NavLink>
-        <InstagramLink />
-      </nav>
+    <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--background)]/88 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-5 px-5 py-4 md:flex-row md:items-center md:justify-between md:px-10 md:py-5">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-4 text-[var(--brown)] md:gap-5"
+        >
+          <img
+            src="/logo/posle-nas-mark.svg"
+            alt=""
+            className="h-12 w-12 object-contain opacity-95 md:h-14 md:w-14"
+          />
+          <span className="font-serif text-[32px] leading-none text-[var(--ink)] md:text-[36px]">
+            после нас
+          </span>
+        </Link>
+        <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs uppercase tracking-[0.18em] text-[var(--brown)] md:gap-8 md:text-sm md:tracking-[0.2em]">
+          <NavLink href="/" active={active === "exhibition"}>
+            выставка
+          </NavLink>
+          <NavLink href="/items" active={active === "items"}>
+            вещи
+          </NavLink>
+          <InstagramLink />
+        </nav>
+      </div>
     </header>
   );
 }

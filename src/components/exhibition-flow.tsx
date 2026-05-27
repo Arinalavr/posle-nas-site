@@ -4,13 +4,14 @@ import { useId, useState } from "react";
 import {
   arcLabels,
   getPhotoSizeClass,
+  itemDimensions,
   type ExhibitionEntry,
   type Item,
   type Quote,
 } from "@/lib/content";
 import { ItemModal } from "@/components/item-modal";
 import {
-  useElementScrollProgress,
+  useScrollLineClip,
   useScrollReveal,
 } from "@/components/use-scroll-reveal";
 
@@ -44,7 +45,7 @@ function QuoteBlock({ quote, index }: { quote: Quote; index: number }) {
       style={{ transitionDelay: `${Math.min(index % 4, 3) * 55}ms` }}
     >
       <figcaption className="mb-4 text-[11px] uppercase tracking-[0.24em] text-[var(--muted-brown)]">
-        {arcLabels[quote.arc]}
+        <span className="quote-label-mask">{arcLabels[quote.arc]}</span>
       </figcaption>
       <blockquote className="font-serif text-[24px] leading-[1.2] text-[var(--ink)] md:text-[28px] md:leading-[1.16]">
         <span className="quote-text-mask">«{quote.text}»</span>
@@ -62,6 +63,8 @@ function PhotoTile({
   index: number;
   onOpen: (item: Item) => void;
 }) {
+  const dimensions = itemDimensions[item.id];
+
   return (
     <button
       className={`${itemLayouts[index % itemLayouts.length]} exhibition-piece photo-piece group scroll-reveal justify-self-center text-left md:justify-self-auto`}
@@ -76,6 +79,8 @@ function PhotoTile({
         <img
           src={item.photo}
           alt={item.photo_alt}
+          width={dimensions?.width}
+          height={dimensions?.height}
           className="block h-auto w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015]"
           loading="lazy"
         />
@@ -99,15 +104,16 @@ export function ExhibitionFlow({
 }: ExhibitionFlowProps) {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const routeClipId = `route-${useId().replace(/:/g, "")}`;
-  const [routeRef, lineProgress] = useElementScrollProgress<SVGSVGElement>({
+  const [routeRef, routeClipRef] = useScrollLineClip<
+    SVGSVGElement,
+    SVGRectElement
+  >({
     startRatio: 0.66,
-    smoothing: 0.28,
   });
   useScrollReveal();
 
   const quoteMap = new Map(quotes.map((quote) => [quote.id, quote]));
   const itemMap = new Map(items.map((item) => [item.id, item]));
-  const lineClipHeight = Math.min(3600, Math.max(0, lineProgress * 3600));
   let quoteIndex = 0;
   let itemIndex = 0;
 
@@ -125,15 +131,16 @@ export function ExhibitionFlow({
         >
           <defs>
             <clipPath id={routeClipId} clipPathUnits="userSpaceOnUse">
-              <rect x="0" y="0" width="420" height={lineClipHeight} />
+              <rect ref={routeClipRef} x="0" y="0" width="420" height="0" />
             </clipPath>
           </defs>
           <path
             className="exhibition-route-drawn"
-            d="M214 0 C128 176 302 276 198 430 C90 592 314 714 218 880 C112 1060 300 1170 190 1350 C75 1538 326 1648 214 1830 C98 2018 306 2162 188 2360 C88 2528 332 2686 212 2860 C110 3008 306 3182 202 3380 C176 3430 160 3494 174 3600"
+            d="M214 0 C160 150 142 286 198 430 C252 574 318 720 218 880 C118 1040 116 1195 190 1350 C264 1505 324 1672 214 1830 C104 1988 118 2170 188 2360 C258 2550 318 2700 212 2860 C106 3020 116 3200 202 3380 C288 3560 190 3530 174 3600"
             fill="none"
             stroke="rgba(199, 140, 123, 0.42)"
             strokeLinecap="round"
+            strokeLinejoin="round"
             strokeWidth="2"
             clipPath={`url(#${routeClipId})`}
           />
